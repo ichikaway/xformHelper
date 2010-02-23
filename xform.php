@@ -21,8 +21,8 @@
  *  insted of making form tags.
  * On form input screen, this helper behaves same as form helper.
  *
- * How does this helper know on confirm screen?
- * When the confirmation transition, 
+ * How does this helper know on confirmation screen?
+ * When the confirmation transition, do following 1 or 2.
  *  1. in controller
  *     $this->params['xformHelperConfirmFlag'] = true;
  *  2. in controller or view file

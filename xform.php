@@ -114,6 +114,22 @@ class XformHelper extends FormHelper {
  */
 	var $changeDatetimeSeparator = null;
 
+/**
+ * set default options for the input method.
+ *
+ * @var array
+ * @access public
+ */ 
+	var $inputDefaultOptions = array();
+
+/**
+ * if set true, month name will be number.
+ *
+ * @var boolean
+ * @access public
+ */ 
+	var $monthNameSetNumber = false;
+
 
 
 	function __construct($config = null) {
@@ -126,8 +142,7 @@ class XformHelper extends FormHelper {
 
 	function input($fieldName, $options = array()) {
 
-		$defaults = array('label' => false, 'error' => false, 'div' => false);
-		$options = array_merge($defaults, $options);
+		$options = array_merge($this->inputDefaultOptions, $options);
 
 		return parent::input($fieldName, $options);
 	}
@@ -147,7 +162,7 @@ class XformHelper extends FormHelper {
 			return $this->getConfirmDatetime($fieldName, $args);
 		}
 
-		if(empty($attributes['monthNames'])){
+		if(empty($attributes['monthNames']) && $this->monthNameSetNumber){
 			$attributes['monthNames'] = false;
 		}
 

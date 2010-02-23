@@ -14,7 +14,7 @@
 * @license http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 
-/*
+/**
  * XFormjpHelper
  */
 App::import('helper', 'Xform');

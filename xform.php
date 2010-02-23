@@ -14,7 +14,7 @@
 * @license http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 
-/*
+/**
  * XFormHelper
  *
  * On confirmation screen, this helper just show value of post data

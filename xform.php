@@ -1,59 +1,119 @@
 <?php
+/**
+*
+* XFormHelper
+*
+* PHP 5
+*
+* Licensed under The MIT License
+* Redistributions of files must retain the above copyright notice.
+*
+* @copyright Copyright 2010, Yasushi Ichikawa http://github.com/ichikaway/
+* @package xform 
+* @subpackage xform.helper
+* @license http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
 
 /*
  * XFormHelper
  *
- * On confirm screen, each method just show value of post data
- *  insted of making form input tag.
+ * On confirmation screen, this helper just show value of post data
+ *  insted of making form tags.
+ * On form input screen, this helper behaves same as form helper.
  *
- * On confirm screen, controller needs to set following,
- *  $this->params['xformHelperConfirmFlag'] = true;
- *  or  
- *  XformHelper::confirmScreenFlag = true;
+ * How does this helper know on confirm screen?
+ * When the confirmation transition, 
+ *  1. in controller
+ *     $this->params['xformHelperConfirmFlag'] = true;
+ *  2. in controller or view file
+ *     XformHelper::confirmScreenFlag = true;
  *
- * If you want to mask a password field on confirm screen,
+ * If you want to mask a password field on confirmation screen,
  *  use password() insted of input().
  *
  * If you want to change separator of datetime,
  *  set separator value on the changeDatetimeSeparator property.
  */
-
 App::import('helper', 'Form');
 class XformHelper extends FormHelper {
 
+/**
+ * confirmation screen flag
+ *
+ * @var boolean
+ * @access public
+ */
 	var $confirmScreenFlag = false;
 
-	// Do htmlescapechar() on confirm screen.
+/**
+ * not fillin password value 
+ * if set false, password value is set on form input tag.
+ *
+ * @var boolean
+ * @access public
+ */
+	var $notFillinPasswordValue = true;
+
+
+/**
+ * output value are escaped on confirmation screen.
+ *
+ * @var boolean
+ * @access public
+ */
 	var $doHtmlEscape = true;
 
-	// Do nl2br on confirm screen.
+
+/**
+ * execute nl2br() for output value on confirmation screen.
+ * 
+ * @var boolean
+ * @access public
+ */
 	var $doNl2br = true;
 
-	// If set true and change $doHtmlEcpane or $doNl2br properties,
-	// these properties are not changed by default value after output.
+/**
+ * If set true and change $doHtmlEcpane or $doNl2br properties,
+ * these properties are not changed by default value after output.
+ * 
+ * @var boolean
+ * @access public
+ */
 	var $escapeBrPermanent = false;
 
-	// The field has array data like checkbox(),
-	// thease array values join with this separator.
+/**
+ * The field which has array data like checkbox(),
+ * thease array value join with this separator on confirmation screen.
+ *
+ * @var string
+ * @access public
+ */
 	var $confirmJoinSeparator = ', ';
 
 
-	/*
-	 *   var $changeDatetimeSeparator = array(
-     *       'datefmt' => array(
-     *           'year' => ' / ',
-     *           'month' => ' / ',
-     *           'day' => '',
-     *           'afterDateTag' => '&nbsp;&nbsp;&nbsp;',
-     *           ),
-     *       'timefmt' => array(
-     *           'hour' => ' : ',
-     *           'min' => '',
-     *           'meridian' => '',
-     *           )
-     *       );
-	 */
+/**
+ * change datetime separator on form input and confirmation screen. 
+ *
+ * @var array
+ * @access public
+ *
+ * Example:
+ *   var $changeDatetimeSeparator = array(
+ *       'datefmt' => array(
+ *           'year' => ' / ',
+ *           'month' => ' / ',
+ *           'day' => '',
+ *           'afterDateTag' => '&nbsp;&nbsp;&nbsp;', //set value between date and time tags.
+ *           ),
+ *       'timefmt' => array(
+ *           'hour' => ' : ',
+ *           'min' => '',
+ *           'meridian' => '',
+ *           )
+ *       );
+ */
 	var $changeDatetimeSeparator = null;
+
 
 
 	function __construct($config = null) {
@@ -154,7 +214,9 @@ class XformHelper extends FormHelper {
         }
 
 		$args = func_get_args();
-		$args[1]['value'] =  ''; //password value clear if show input form.
+		if($this->notFillinPasswordValue) {
+			$args[1]['value'] =  ''; //password value clear if show input form.
+		}
 		return call_user_func_array( array($this, 'parent::password'), $args);
 	}
 

@@ -142,10 +142,10 @@ class XformHelper extends FormHelper {
 
 	function dateTime($fieldName, $dateFormat = 'DMY', $timeFormat = '12', $selected = null, $attributes = array(), $showEmpty = true) {
 
-        if($this->checkConfirmScreen()) {
+		if($this->checkConfirmScreen()) {
 			$args = func_get_args();
-            return $this->getConfirmDatetime($fieldName, $args);
-        }
+			return $this->getConfirmDatetime($fieldName, $args);
+		}
 
 		if(empty($attributes['monthNames'])){
 			$attributes['monthNames'] = false;
@@ -204,14 +204,14 @@ class XformHelper extends FormHelper {
 	}
 
 	function password($fieldName) {
-        if($this->checkConfirmScreen()) {
+		if($this->checkConfirmScreen()) {
 			$value = $this->getConfirmInput($fieldName);
 			if(!empty($value)) {
-            	return '*****';
+				return '*****';
 			}else {
 				return '';
 			}
-        }
+		}
 
 		$args = func_get_args();
 		if($this->notFillinPasswordValue) {
@@ -222,46 +222,46 @@ class XformHelper extends FormHelper {
 
 
 	function textarea($fieldName) {
-        if($this->checkConfirmScreen()) {
-            return $this->getConfirmInput($fieldName);
-        }
+		if($this->checkConfirmScreen()) {
+			return $this->getConfirmInput($fieldName);
+		}
 
 		$args = func_get_args();
 		return call_user_func_array( array($this, 'parent::textarea'), $args);
 	}
 
 	function text($fieldName) {
-        if($this->checkConfirmScreen()) {
-            return $this->getConfirmInput($fieldName);
-        }
+		if($this->checkConfirmScreen()) {
+			return $this->getConfirmInput($fieldName);
+		}
 
 		$args = func_get_args();
 		return call_user_func_array( array($this, 'parent::text'), $args);
 	}
 
 	function radio($fieldName) {
-        if($this->checkConfirmScreen()) {
-            return $this->getConfirmInput($fieldName);
-        }
+		if($this->checkConfirmScreen()) {
+			return $this->getConfirmInput($fieldName);
+		}
 		$args = func_get_args();
 		return call_user_func_array( array($this, 'parent::radio'), $args);
-		
+
 	}
 
 
 	function select($fieldName) {
-        if($this->checkConfirmScreen()) {
-            return $this->getConfirmInput($fieldName);
-        }
+		if($this->checkConfirmScreen()) {
+			return $this->getConfirmInput($fieldName);
+		}
 		$args = func_get_args();
 		return call_user_func_array( array($this, 'parent::select'), $args);
-		
+
 	}
 
 	function checkbox($fieldName) {
-        if($this->checkConfirmScreen()) {
-            return $this->getConfirmInput($fieldName);
-        }
+		if($this->checkConfirmScreen()) {
+			return $this->getConfirmInput($fieldName);
+		}
 		$args = func_get_args();
 		return call_user_func_array( array($this, 'parent::checkbox'), $args);
 	}
@@ -316,12 +316,12 @@ class XformHelper extends FormHelper {
 		if(empty($data[$fieldName])) {
 			return false;
 		}
-		
+
 		return $data;
 	}
 
 
-	
+
 	function getConfirmInput($fieldName) {
 
 		if($data = $this->_getFieldData($fieldName)) {

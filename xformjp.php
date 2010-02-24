@@ -9,13 +9,13 @@
 * Redistributions of files must retain the above copyright notice.
 *
 * @copyright Copyright 2010, Yasushi Ichikawa http://github.com/ichikaway/
-* @package xform 
-* @subpackage xform.helper
+* @package xformjp 
+* @subpackage xformjp.xform.helper
 * @license http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 
 /**
- * XFormjpHelper
+ * XFormjpHelper for Japanese users.
  */
 App::import('helper', 'Xform');
 class XformjpHelper extends XformHelper {

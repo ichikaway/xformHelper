@@ -141,7 +141,6 @@ class XformHelper extends FormHelper {
 	}
 
 	function input($fieldName, $options = array()) {
-
 		$options = array_merge($this->inputDefaultOptions, $options);
 
 		return parent::input($fieldName, $options);
@@ -254,9 +253,9 @@ class XformHelper extends FormHelper {
 		return call_user_func_array( array($this, 'parent::text'), $args);
 	}
 
-	function radio($fieldName) {
+	function radio($fieldName, $options = null) {
 		if($this->checkConfirmScreen()) {
-			return $this->getConfirmInput($fieldName);
+			return $this->getConfirmInput($fieldName, $options);
 		}
 		$args = func_get_args();
 		return call_user_func_array( array($this, 'parent::radio'), $args);
@@ -264,9 +263,9 @@ class XformHelper extends FormHelper {
 	}
 
 
-	function select($fieldName) {
+	function select($fieldName, $options = null) {
 		if($this->checkConfirmScreen()) {
-			return $this->getConfirmInput($fieldName);
+			return $this->getConfirmInput($fieldName, $options);
 		}
 		$args = func_get_args();
 		return call_user_func_array( array($this, 'parent::select'), $args);
@@ -311,13 +310,21 @@ class XformHelper extends FormHelper {
 	}
 
 
-	function _getFieldData($fieldName) {
+	function _getFieldData($fieldName, $options = null) {
 		$modelname = current($this->params['models']);
 
 		// for Model.field pattern
 		$model_field = explode('.', $fieldName);
-		if(!empty($model_field[1])) {
+
+		if(!empty($model_field[1]) && !empty($this->data[$model_field[0]])) {
 			$fieldName = $model_field[1];
+
+		}else if(!empty($model_field[0])) {
+			$fieldName = $model_field[0];
+		}
+		
+
+		if(!empty($model_field[1]) && !empty($this->data[$model_field[0]])) {
 			$data = $this->data[$model_field[0]];
 
 		}else{
@@ -332,19 +339,24 @@ class XformHelper extends FormHelper {
 			return false;
 		}
 
-		return $data;
+		return $data[$fieldName];
 	}
 
 
 
-	function getConfirmInput($fieldName) {
+	function getConfirmInput($fieldName, $options = null) {
 
-		if($data = $this->_getFieldData($fieldName)) {
+		if($data = $this->_getFieldData($fieldName, $options)) {
 
-			if(is_array($data[$fieldName])) {
-				$out = join($this->confirmJoinSeparator, $data[$fieldName]);
+			if(is_array($data)) {
+				if(is_array($options)) {
+					foreach($data as $key => $val) {	
+						$data[$key] = (!empty($options[$val])) ? $options[$val] : $val;
+					}
+				}							
+				$out = join($this->confirmJoinSeparator, $data);
 			}else {
-				$out = $data[$fieldName];
+				$out = (is_array($options) && !empty($options[$data])) ? $options[$data] : $data;
 			}
 			return $this->_confirmValueOutput($out);
 		} 
@@ -355,9 +367,9 @@ class XformHelper extends FormHelper {
 
 	function getConfirmDatetime($fieldName, $options = array()) {
 		if($data = $this->_getFieldData($fieldName)) {
-			if(is_array($data[$fieldName])) {
+			if(is_array($data)) {
 				$nothing = true;
-				foreach($data[$fieldName] as $key => $val) {
+				foreach($data as $key => $val) {
 					if(!empty($val)){
 						$nothing = false;
 					}
@@ -390,19 +402,19 @@ class XformHelper extends FormHelper {
 
 
 				foreach($datefmt as $key => $val) {
-					$out .= (isset($data[$fieldName][$key]) ? $data[$fieldName][$key] . $val : '');
+					$out .= (isset($data[$key]) ? $data[$key] . $val : '');
 				}
 				if(!empty($options[2]) && $options[2] !== 'NONE') {
 					$out .= ' ';
 					foreach($timefmt as $key => $val) {
-						$sprintf_fmt = (isset($data[$fieldName][$key]) && is_numeric($data[$fieldName][$key])) ? '%02d' :'%s';
-						$out .= (isset($data[$fieldName][$key]) ? sprintf($sprintf_fmt ,$data[$fieldName][$key]) .$val : '');
+						$sprintf_fmt = (isset($data[$key]) && is_numeric($data[$key])) ? '%02d' :'%s';
+						$out .= (isset($data[$key]) ? sprintf($sprintf_fmt ,$data[$key]) .$val : '');
 					}
 				}
 
 
 			}else {
-				$out = $data[$fieldName];
+				$out = $data;
 			}
 
 			return $this->_confirmValueOutput($out);

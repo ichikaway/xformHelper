@@ -335,18 +335,18 @@ class XformHelper extends FormHelper {
 			}
 		}
 
-		if(empty($data[$fieldName])) {
-			return false;
+		if(isset($data[$fieldName])) {
+			return $data[$fieldName];
 		}
 
-		return $data[$fieldName];
+		return false;
 	}
 
 
 
 	function getConfirmInput($fieldName, $options = null) {
-
-		if($data = $this->_getFieldData($fieldName, $options)) {
+		$data = $this->_getFieldData($fieldName, $options);	
+		if(isset($data)) {
 
 			if(is_array($data)) {
 				if(is_array($options)) {

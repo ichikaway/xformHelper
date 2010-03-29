@@ -127,6 +127,29 @@ class XformjpHelper extends XformHelper {
 	var $monthNameSetNumber = true;
 
 
+/**
+ * the create method which shows only form and input tag.
+ * delete display:none, because can not send Token with Japanese mobile devices.
+ *
+ * @param string model name
+ * @param array options
+ */
+	function create($model = null, $options = array()) {
+		return strip_tags(parent::create($model, $options), '<form><input>');
+	}
+
+
+/**
+ * the end method which shows only form and input tag.
+ * delete display:none, because can not send Token with Japanese mobile devices.
+ *
+ * @param array options
+ */
+	function end($options = null) {
+		return strip_tags(parent::end($options), '<form><input>');
+	}
+
+
 
 }
 ?>

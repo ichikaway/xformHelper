@@ -231,7 +231,7 @@ class XformHelper extends FormHelper {
 		if($this->notFillinPasswordValue) {
 			$args[1]['value'] =  ''; //password value clear if show input form.
 		}
-		return call_user_func_array( array($this, 'parent::password'), $args);
+		return $this->__xformCallParent( array($this, 'parent::password'), $args);
 	}
 
 
@@ -241,7 +241,7 @@ class XformHelper extends FormHelper {
 		}
 
 		$args = func_get_args();
-		return call_user_func_array( array($this, 'parent::textarea'), $args);
+		return $this->__xformCallParent( array($this, 'parent::textarea'), $args);
 	}
 
 	function text($fieldName) {
@@ -250,7 +250,7 @@ class XformHelper extends FormHelper {
 		}
 
 		$args = func_get_args();
-		return call_user_func_array( array($this, 'parent::text'), $args);
+		return $this->__xformCallParent( array($this, 'parent::text'), $args);
 	}
 
 	function radio($fieldName, $options = null) {
@@ -258,7 +258,7 @@ class XformHelper extends FormHelper {
 			return $this->getConfirmInput($fieldName, $options);
 		}
 		$args = func_get_args();
-		return call_user_func_array( array($this, 'parent::radio'), $args);
+		return $this->__xformCallParent( array($this, 'parent::radio'), $args);
 
 	}
 
@@ -268,7 +268,7 @@ class XformHelper extends FormHelper {
 			return $this->getConfirmInput($fieldName, $options);
 		}
 		$args = func_get_args();
-		return call_user_func_array( array($this, 'parent::select'), $args);
+		return $this->__xformCallParent( array($this, 'parent::select'), $args);
 
 	}
 
@@ -277,7 +277,7 @@ class XformHelper extends FormHelper {
 			return $this->getConfirmInput($fieldName);
 		}
 		$args = func_get_args();
-		return call_user_func_array( array($this, 'parent::checkbox'), $args);
+		return $this->__xformCallParent( array($this, 'parent::checkbox'), $args);
 	}
 
 	function checkConfirmScreen() {
@@ -423,6 +423,19 @@ class XformHelper extends FormHelper {
 		return '';
 	}
 
+
+	/**
+	 * call call_user_func_array with different arguments.
+	 * php5.3 has different arguments from under php5.2.
+	 */
+	function __xformCallParent( $call, $args) {
+
+		if(PHP_VERSION >= 5.3 && is_array($call)) {
+			$call = $call[1];
+		}
+		return call_user_func_array( $call, $args); 
+
+	}
 
 }
 ?>

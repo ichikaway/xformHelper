@@ -133,10 +133,11 @@ class XformHelper extends FormHelper {
 
 
 	function __construct($config = null) {
-
-		foreach($config as $key => $val) {
-			$this->{$key} = $val;
-		}	
+		if(!empty($config)) {
+			foreach($config as $key => $val) {
+				$this->{$key} = $val;
+			}
+		}
 		parent::__construct();
 	}
 

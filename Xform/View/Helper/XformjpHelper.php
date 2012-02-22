@@ -17,7 +17,8 @@
 /**
  * XFormjpHelper for Japanese users.
  */
-App::import('helper', 'Xform');
+
+App::uses('XformHelper', 'Xform.View/Helper');
 class XformjpHelper extends XformHelper {
 
 /**

@@ -34,7 +34,7 @@
  * If you want to change separator of datetime,
  *  set separator value on the changeDatetimeSeparator property.
  */
-App::import('helper', 'Form');
+
 class XformHelper extends FormHelper {
 
 /**
@@ -132,13 +132,13 @@ class XformHelper extends FormHelper {
 
 
 
-	function __construct($config = null) {
+	function __construct(View $View, $config = array()) {
 		if(!empty($config)) {
 			foreach($config as $key => $val) {
 				$this->{$key} = $val;
 			}
 		}
-		parent::__construct();
+		parent::__construct($View);
 	}
 
 	function input($fieldName, $options = array()) {
@@ -153,7 +153,6 @@ class XformHelper extends FormHelper {
 		$options = array_merge($defaults, $options);
 		return parent::error($field, $text, $options);
 	}	
-
 
 	function dateTime($fieldName, $dateFormat = 'DMY', $timeFormat = '12', $selected = null, $attributes = array(), $showEmpty = true) {
 
@@ -282,7 +281,7 @@ class XformHelper extends FormHelper {
 	}
 
 	function checkConfirmScreen() {
-		if(!empty($this->params['xformHelperConfirmFlag']) && $this->params['xformHelperConfirmFlag'] === true) {
+		if(!empty($this->request->params['xformHelperConfirmFlag']) && $this->request->params['xformHelperConfirmFlag'] === true) {
 			return true;
 		}
 
@@ -312,12 +311,13 @@ class XformHelper extends FormHelper {
 
 
 	function _getFieldData($fieldName, $options = null) {
-		$modelname = current($this->params['models']);
+	
+		$modelname = key($this->request->params['models']);
 
 		// for Model.field pattern
 		$model_field = explode('.', $fieldName);
 
-		if(!empty($model_field[1]) && !empty($this->data[$model_field[0]])) {
+		if(!empty($model_field[1]) && !empty($this->request->data[$model_field[0]])) {
 			$fieldName = $model_field[1];
 
 		}else if(!empty($model_field[0])) {
@@ -325,14 +325,14 @@ class XformHelper extends FormHelper {
 		}
 		
 
-		if(!empty($model_field[1]) && !empty($this->data[$model_field[0]])) {
-			$data = $this->data[$model_field[0]];
+		if(!empty($model_field[1]) && !empty($this->request->data[$model_field[0]])) {
+			$data = $this->request->data[$model_field[0]];
 
 		}else{
 			if(empty($modelname)) {
-				$data = current($this->data);
+				$data = current($this->request->data);
 			}else {
-				$data = $this->data[$modelname];
+				$data = $this->request->data[$modelname];
 			}
 		}
 

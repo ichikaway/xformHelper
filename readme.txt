@@ -1,6 +1,6 @@
 
- XFormHelper
- extends cakephp form helper.
+ XFormHelper(Plugin)
+ extends cakephp Form helper.
 
  On confirmation screen, this helper just show value of post data
   insted of making form tags.
@@ -12,11 +12,22 @@
   1. in controller
      $this->params['xformHelperConfirmFlag'] = true;
   2. in controller or view file
-     XformHelper::confirmScreenFlag = true;
+     $this->XformHelper->confirmScreenFlag = true;
 
  If you want to mask a password field on confirmation screen,
-  use password( insted of input(.
+  use password method insted of input method.
 
  If you want to change separator of datetime,
   set separator value on the changeDatetimeSeparator property.
+
+
+Installation
+------------
+ * Copy the files in this directory into app/Plugin/Xform
+ * load plugin in bootstrap
+ 	CakePlugin::load('Xform');
+ * Include the helper in your controller.php:
+	var $helpers = array('Xform.Xformp');
+ * call method of XformHelper in your view.
+ 	echo $this->Xform->input('title');
 

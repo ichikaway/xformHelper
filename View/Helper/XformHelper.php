@@ -9,7 +9,7 @@
 * Redistributions of files must retain the above copyright notice.
 *
 * @copyright Copyright 2010, Yasushi Ichikawa http://github.com/ichikaway/
-* @package xform 
+* @package xform
 * @subpackage xform.helper
 * @license http://www.opensource.org/licenses/mit-license.php The MIT License
 */
@@ -43,16 +43,16 @@ class XformHelper extends FormHelper {
  * @var boolean
  * @access public
  */
-	var $confirmScreenFlag = false;
+	public $confirmScreenFlag = false;
 
 /**
- * not fillin password value 
+ * not fillin password value
  * if set false, password value is set on form input tag.
  *
  * @var boolean
  * @access public
  */
-	var $notFillinPasswordValue = true;
+	public $notFillinPasswordValue = true;
 
 
 /**
@@ -61,25 +61,25 @@ class XformHelper extends FormHelper {
  * @var boolean
  * @access public
  */
-	var $doHtmlEscape = true;
+	public $doHtmlEscape = true;
 
 
 /**
  * execute nl2br() for output value on confirmation screen.
- * 
+ *
  * @var boolean
  * @access public
  */
-	var $doNl2br = true;
+	public $doNl2br = true;
 
 /**
  * If set true and change $doHtmlEcpane or $doNl2br properties,
  * these properties are not changed by default value after output.
- * 
+ *
  * @var boolean
  * @access public
  */
-	var $escapeBrPermanent = false;
+	public $escapeBrPermanent = false;
 
 /**
  * The field which has array data like checkbox(),
@@ -88,11 +88,11 @@ class XformHelper extends FormHelper {
  * @var string
  * @access public
  */
-	var $confirmJoinSeparator = ', ';
+	public $confirmJoinSeparator = ', ';
 
 
 /**
- * change datetime separator on form input and confirmation screen. 
+ * change datetime separator on form input and confirmation screen.
  *
  * @var array
  * @access public
@@ -112,27 +112,27 @@ class XformHelper extends FormHelper {
  *           )
  *       );
  */
-	var $changeDatetimeSeparator = null;
+	public $changeDatetimeSeparator = null;
 
 /**
  * set default options for the input method.
  *
  * @var array
  * @access public
- */ 
-	var $inputDefaultOptions = array();
+ */
+	public $inputDefaultOptions = array();
 
 /**
  * if set true, month name will be number.
  *
  * @var boolean
  * @access public
- */ 
-	var $monthNameSetNumber = false;
+ */
+	public $monthNameSetNumber = false;
 
 
 
-	function __construct(View $View, $config = array()) {
+	public function __construct(View $View, $config = array()) {
 		if(!empty($config)) {
 			foreach($config as $key => $val) {
 				$this->{$key} = $val;
@@ -141,20 +141,48 @@ class XformHelper extends FormHelper {
 		parent::__construct($View);
 	}
 
-	function input($fieldName, $options = array()) {
+
+/**
+ * override __call for password() and text() method 
+ *
+ */
+	public function __call($method, $params) {
+		$fieldName = $params[0];
+		if($method === 'password' && $this->checkConfirmScreen()) {
+			$value = $this->getConfirmInput($fieldName);
+			if(!empty($value)) {
+				return '*****';
+			}else {
+				return '';
+			}
+
+		} elseif($this->checkConfirmScreen()) {
+			return $this->getConfirmInput($fieldName);
+		}
+
+
+		if($method === 'password' && $this->notFillinPasswordValue) {
+			$params[1]['value'] =  ''; //password value clear if show input form.
+		}
+
+		return parent::__call($method, $params);
+	}
+
+
+	public function input($fieldName, $options = array()) {
 		$options = array_merge($this->inputDefaultOptions, $options);
 
 		return parent::input($fieldName, $options);
 	}
 
 
-	function error($field, $text = null, $options = array()) {
+	public function error($field, $text = null, $options = array()) {
 		$defaults = array('wrap' => true);
 		$options = array_merge($defaults, $options);
 		return parent::error($field, $text, $options);
-	}	
+	}
 
-	function dateTime($fieldName, $dateFormat = 'DMY', $timeFormat = '12', $selected = null, $attributes = array(), $showEmpty = true) {
+	public function dateTime($fieldName, $dateFormat = 'DMY', $timeFormat = '12', $selected = null, $attributes = array(), $showEmpty = true) {
 
 		if($this->checkConfirmScreen()) {
 			$args = func_get_args();
@@ -217,25 +245,7 @@ class XformHelper extends FormHelper {
 		return $out;
 	}
 
-	function password($fieldName) {
-		if($this->checkConfirmScreen()) {
-			$value = $this->getConfirmInput($fieldName);
-			if(!empty($value)) {
-				return '*****';
-			}else {
-				return '';
-			}
-		}
-
-		$args = func_get_args();
-		if($this->notFillinPasswordValue) {
-			$args[1]['value'] =  ''; //password value clear if show input form.
-		}
-		return $this->__xformCallParent( array($this, 'parent::password'), $args);
-	}
-
-
-	function textarea($fieldName) {
+	public function textarea($fieldName, $options = null) {
 		if($this->checkConfirmScreen()) {
 			return $this->getConfirmInput($fieldName);
 		}
@@ -244,16 +254,7 @@ class XformHelper extends FormHelper {
 		return $this->__xformCallParent( array($this, 'parent::textarea'), $args);
 	}
 
-	function text($fieldName) {
-		if($this->checkConfirmScreen()) {
-			return $this->getConfirmInput($fieldName);
-		}
-
-		$args = func_get_args();
-		return $this->__xformCallParent( array($this, 'parent::text'), $args);
-	}
-
-	function radio($fieldName, $options = null) {
+	public function radio($fieldName, $options = null, $attributes = array()) {
 		if($this->checkConfirmScreen()) {
 			return $this->getConfirmInput($fieldName, $options);
 		}
@@ -263,7 +264,7 @@ class XformHelper extends FormHelper {
 	}
 
 
-	function select($fieldName, $options = null) {
+	public function select($fieldName, $options = null, $attributes = array()) {
 		if($this->checkConfirmScreen()) {
 			return $this->getConfirmInput($fieldName, $options);
 		}
@@ -272,7 +273,7 @@ class XformHelper extends FormHelper {
 
 	}
 
-	function checkbox($fieldName) {
+	public function checkbox($fieldName, $options = null) {
 		if($this->checkConfirmScreen()) {
 			return $this->getConfirmInput($fieldName);
 		}
@@ -280,7 +281,7 @@ class XformHelper extends FormHelper {
 		return $this->__xformCallParent( array($this, 'parent::checkbox'), $args);
 	}
 
-	function checkConfirmScreen() {
+	public function checkConfirmScreen() {
 		if(!empty($this->request->params['xformHelperConfirmFlag']) && $this->request->params['xformHelperConfirmFlag'] === true) {
 			return true;
 		}
@@ -292,7 +293,7 @@ class XformHelper extends FormHelper {
 	}
 
 
-	function _confirmValueOutput($data) {
+	protected function _confirmValueOutput($data) {
 		if($this->doHtmlEscape) {
 			$data = h($data);
 		}
@@ -310,8 +311,8 @@ class XformHelper extends FormHelper {
 	}
 
 
-	function _getFieldData($fieldName, $options = null) {
-	
+	protected function _getFieldData($fieldName, $options = null) {
+
 		$modelname = key($this->request->params['models']);
 
 		// for Model.field pattern
@@ -323,7 +324,7 @@ class XformHelper extends FormHelper {
 		}else if(!empty($model_field[0])) {
 			$fieldName = $model_field[0];
 		}
-		
+
 
 		if(!empty($model_field[1]) && !empty($this->request->data[$model_field[0]])) {
 			$data = $this->request->data[$model_field[0]];
@@ -345,28 +346,28 @@ class XformHelper extends FormHelper {
 
 
 
-	function getConfirmInput($fieldName, $options = null) {
-		$data = $this->_getFieldData($fieldName, $options);	
+	public function getConfirmInput($fieldName, $options = null) {
+		$data = $this->_getFieldData($fieldName, $options);
 		if(isset($data)) {
 
 			if(is_array($data)) {
 				if(is_array($options)) {
-					foreach($data as $key => $val) {	
+					foreach($data as $key => $val) {
 						$data[$key] = (!empty($options[$val])) ? $options[$val] : $val;
 					}
-				}							
+				}
 				$out = join($this->confirmJoinSeparator, $data);
 			}else {
 				$out = (is_array($options) && !empty($options[$data])) ? $options[$data] : $data;
 			}
 			return $this->_confirmValueOutput($out);
-		} 
+		}
 
 		return '';
 	}
 
 
-	function getConfirmDatetime($fieldName, $options = array()) {
+	public function getConfirmDatetime($fieldName, $options = array()) {
 		if($data = $this->_getFieldData($fieldName)) {
 			if(is_array($data)) {
 				$nothing = true;
@@ -396,7 +397,7 @@ class XformHelper extends FormHelper {
 
 				$out = null;
 
-				if(!empty( $this->changeDatetimeSeparator )){ 
+				if(!empty( $this->changeDatetimeSeparator )){
 					$datefmt = $this->changeDatetimeSeparator['datefmt'];
 					$timefmt = $this->changeDatetimeSeparator['timefmt'];
 				}
@@ -425,18 +426,17 @@ class XformHelper extends FormHelper {
 	}
 
 
-	/**
-	 * call call_user_func_array with different arguments.
-	 * php5.3 has different arguments from under php5.2.
-	 */
-	function __xformCallParent( $call, $args) {
+/**
+ * call call_user_func_array with different arguments.
+ * php5.3 has different arguments from under php5.2.
+ */
+	private function __xformCallParent( $call, $args) {
 
 		if(PHP_VERSION >= 5.3 && is_array($call)) {
 			$call = $call[1];
 		}
-		return call_user_func_array( $call, $args); 
+		return call_user_func_array( $call, $args);
 
 	}
 
 }
-?>

@@ -9,7 +9,7 @@
 * Redistributions of files must retain the above copyright notice.
 *
 * @copyright Copyright 2010, Yasushi Ichikawa http://github.com/ichikaway/
-* @package xformjp 
+* @package xformjp
 * @subpackage xformjp.xform.helper
 * @license http://www.opensource.org/licenses/mit-license.php The MIT License
 */
@@ -27,16 +27,16 @@ class XformjpHelper extends XformHelper {
  * @var boolean
  * @access public
  */
-	var $confirmScreenFlag = false;
+    public $confirmScreenFlag = false;
 
 /**
- * not fillin password value 
+ * not fillin password value
  * if set false, password value is set on form input tag.
  *
  * @var boolean
  * @access public
  */
-	var $notFillinPasswordValue = true;
+    public $notFillinPasswordValue = true;
 
 
 /**
@@ -45,25 +45,25 @@ class XformjpHelper extends XformHelper {
  * @var boolean
  * @access public
  */
-	var $doHtmlEscape = true;
+    public $doHtmlEscape = true;
 
 
 /**
  * execute nl2br() for output value on confirmation screen.
- * 
+ *
  * @var boolean
  * @access public
  */
-	var $doNl2br = true;
+    public $doNl2br = true;
 
 /**
  * If set true and change $doHtmlEcpane or $doNl2br properties,
  * these properties are not changed by default value after output.
- * 
+ *
  * @var boolean
  * @access public
  */
-	var $escapeBrPermanent = false;
+    public $escapeBrPermanent = false;
 
 /**
  * The field which has array data like checkbox(),
@@ -72,11 +72,11 @@ class XformjpHelper extends XformHelper {
  * @var string
  * @access public
  */
-	var $confirmJoinSeparator = ', ';
+    public $confirmJoinSeparator = ', ';
 
 
 /**
- * change datetime separator on form input and confirmation screen. 
+ * change datetime separator on form input and confirmation screen.
  *
  * @var array
  * @access public
@@ -96,19 +96,19 @@ class XformjpHelper extends XformHelper {
  *           )
  *       );
  */
-	var $changeDatetimeSeparator = array(
-			'datefmt' => array(
-				'year' => '年',
-				'month' => '月',
-				'day' => '日',
-				'afterDateTag' => '&nbsp;&nbsp;&nbsp;', //dateとtimeの表示の間に入れる文字列
-				),
-			'timefmt' => array(
-				'hour' => '時',
-				'min' => '分',
-				'meridian' => '',
-				)
-			);
+    public $changeDatetimeSeparator = array(
+            'datefmt' => array(
+                'year' => '年',
+                'month' => '月',
+                'day' => '日',
+                'afterDateTag' => '&nbsp;&nbsp;&nbsp;', //dateとtimeの表示の間に入れる文字列
+                ),
+            'timefmt' => array(
+                'hour' => '時',
+                'min' => '分',
+                'meridian' => '',
+                )
+            );
 
 /**
  * set default options for the input method.
@@ -116,7 +116,7 @@ class XformjpHelper extends XformHelper {
  * @var array
  * @access public
  */
-	var $inputDefaultOptions = array('label' => false, 'error' => false, 'div' => false);
+    public $inputDefaultOptions = array('label' => false, 'error' => false, 'div' => false);
 
 
 /**
@@ -125,7 +125,7 @@ class XformjpHelper extends XformHelper {
  * @var boolean
  * @access public
  */
-	var $monthNameSetNumber = true;
+    public $monthNameSetNumber = true;
 
 
 /**
@@ -135,9 +135,9 @@ class XformjpHelper extends XformHelper {
  * @param string model name
  * @param array options
  */
-	function create($model = null, $options = array()) {
-		return strip_tags(parent::create($model, $options), '<form><input>');
-	}
+    public function create($model = null, $options = array()) {
+        return strip_tags(parent::create($model, $options), '<form><input>');
+    }
 
 
 /**
@@ -146,11 +146,10 @@ class XformjpHelper extends XformHelper {
  *
  * @param array options
  */
-	function end($options = null) {
-		return strip_tags(parent::end($options), '<form><input>');
-	}
+    public function end($options = null) {
+        return strip_tags(parent::end($options), '<form><input>');
+    }
 
 
 
 }
-?>

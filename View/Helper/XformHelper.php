@@ -245,7 +245,7 @@ class XformHelper extends FormHelper {
 		return $out;
 	}
 
-	public function textarea($fieldName) {
+	public function textarea($fieldName, $options = null) {
 		if($this->checkConfirmScreen()) {
 			return $this->getConfirmInput($fieldName);
 		}
@@ -254,7 +254,7 @@ class XformHelper extends FormHelper {
 		return $this->__xformCallParent( array($this, 'parent::textarea'), $args);
 	}
 
-	public function radio($fieldName, $options = null) {
+	public function radio($fieldName, $options = null, $attributes = array()) {
 		if($this->checkConfirmScreen()) {
 			return $this->getConfirmInput($fieldName, $options);
 		}
@@ -264,7 +264,7 @@ class XformHelper extends FormHelper {
 	}
 
 
-	public function select($fieldName, $options = null) {
+	public function select($fieldName, $options = null, $attributes = array()) {
 		if($this->checkConfirmScreen()) {
 			return $this->getConfirmInput($fieldName, $options);
 		}
@@ -273,7 +273,7 @@ class XformHelper extends FormHelper {
 
 	}
 
-	public function checkbox($fieldName) {
+	public function checkbox($fieldName, $options = null) {
 		if($this->checkConfirmScreen()) {
 			return $this->getConfirmInput($fieldName);
 		}

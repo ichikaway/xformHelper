@@ -439,4 +439,3 @@ class XformHelper extends FormHelper {
     }
 
 }
-?>

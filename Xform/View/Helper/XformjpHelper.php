@@ -153,4 +153,3 @@ class XformjpHelper extends XformHelper {
 
 
 }
-?>

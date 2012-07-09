@@ -43,7 +43,7 @@ class XformHelper extends FormHelper {
  * @var boolean
  * @access public
  */
-    public $confirmScreenFlag = false;
+	public $confirmScreenFlag = false;
 
 /**
  * not fillin password value
@@ -52,7 +52,7 @@ class XformHelper extends FormHelper {
  * @var boolean
  * @access public
  */
-    public $notFillinPasswordValue = true;
+	public $notFillinPasswordValue = true;
 
 
 /**
@@ -61,7 +61,7 @@ class XformHelper extends FormHelper {
  * @var boolean
  * @access public
  */
-    public $doHtmlEscape = true;
+	public $doHtmlEscape = true;
 
 
 /**
@@ -70,7 +70,7 @@ class XformHelper extends FormHelper {
  * @var boolean
  * @access public
  */
-    public $doNl2br = true;
+	public $doNl2br = true;
 
 /**
  * If set true and change $doHtmlEcpane or $doNl2br properties,
@@ -79,7 +79,7 @@ class XformHelper extends FormHelper {
  * @var boolean
  * @access public
  */
-    public $escapeBrPermanent = false;
+	public $escapeBrPermanent = false;
 
 /**
  * The field which has array data like checkbox(),
@@ -88,7 +88,7 @@ class XformHelper extends FormHelper {
  * @var string
  * @access public
  */
-    public $confirmJoinSeparator = ', ';
+	public $confirmJoinSeparator = ', ';
 
 
 /**
@@ -112,7 +112,7 @@ class XformHelper extends FormHelper {
  *           )
  *       );
  */
-    public $changeDatetimeSeparator = null;
+	public $changeDatetimeSeparator = null;
 
 /**
  * set default options for the input method.
@@ -120,7 +120,7 @@ class XformHelper extends FormHelper {
  * @var array
  * @access public
  */
-    public $inputDefaultOptions = array();
+	public $inputDefaultOptions = array();
 
 /**
  * if set true, month name will be number.
@@ -128,315 +128,315 @@ class XformHelper extends FormHelper {
  * @var boolean
  * @access public
  */
-    public $monthNameSetNumber = false;
+	public $monthNameSetNumber = false;
 
 
 
-    public function __construct(View $View, $config = array()) {
-        if(!empty($config)) {
-            foreach($config as $key => $val) {
-                $this->{$key} = $val;
-            }
-        }
-        parent::__construct($View);
-    }
+	public function __construct(View $View, $config = array()) {
+		if(!empty($config)) {
+			foreach($config as $key => $val) {
+				$this->{$key} = $val;
+			}
+		}
+		parent::__construct($View);
+	}
 
 
 /**
  * override __call for password() and text() method 
  *
  */
-		public function __call($method, $params) {
-			$fieldName = $params[0];
-			if($method === 'password' && $this->checkConfirmScreen()) {
-				$value = $this->getConfirmInput($fieldName);
-				if(!empty($value)) {
-					return '*****';
-				}else {
-					return '';
-				}
-
-			} elseif($this->checkConfirmScreen()) {
-				return $this->getConfirmInput($fieldName);
+	public function __call($method, $params) {
+		$fieldName = $params[0];
+		if($method === 'password' && $this->checkConfirmScreen()) {
+			$value = $this->getConfirmInput($fieldName);
+			if(!empty($value)) {
+				return '*****';
+			}else {
+				return '';
 			}
 
-
-			if($method === 'password' && $this->notFillinPasswordValue) {
-				$params[1]['value'] =  ''; //password value clear if show input form.
-			}
-
-			return parent::__call($method, $params);
+		} elseif($this->checkConfirmScreen()) {
+			return $this->getConfirmInput($fieldName);
 		}
 
 
-    public function input($fieldName, $options = array()) {
-        $options = array_merge($this->inputDefaultOptions, $options);
+		if($method === 'password' && $this->notFillinPasswordValue) {
+			$params[1]['value'] =  ''; //password value clear if show input form.
+		}
 
-        return parent::input($fieldName, $options);
-    }
-
-
-    public function error($field, $text = null, $options = array()) {
-        $defaults = array('wrap' => true);
-        $options = array_merge($defaults, $options);
-        return parent::error($field, $text, $options);
-    }
-
-    public function dateTime($fieldName, $dateFormat = 'DMY', $timeFormat = '12', $selected = null, $attributes = array(), $showEmpty = true) {
-
-        if($this->checkConfirmScreen()) {
-            $args = func_get_args();
-            return $this->getConfirmDatetime($fieldName, $args);
-        }
-
-        if(empty($attributes['monthNames']) && $this->monthNameSetNumber){
-            $attributes['monthNames'] = false;
-        }
+		return parent::__call($method, $params);
+	}
 
 
-        $separator = (!empty($attributes['separator'])) ? $attributes['separator'] : '-';
-        $datefmt = array(
-                'year' => $separator,
-                'month' => $separator,
-                'day' => '',
-                'afterDateTag' => '',
-                );
-        $timefmt = array(
-                'hour' => ':',
-                'min' => '',
-                'meridian' => '',
-                );
+	public function input($fieldName, $options = array()) {
+		$options = array_merge($this->inputDefaultOptions, $options);
 
-        if(!empty($this->changeDatetimeSeparator)) {
-            $datefmt = $this->changeDatetimeSeparator['datefmt'];
-            $timefmt = $this->changeDatetimeSeparator['timefmt'];
-        }
-
-        $out = $out_date = $out_time = null;
-        if(!empty($dateFormat) && $dateFormat !== 'NONE') {
-            $tmp_separator = (!empty($attributes['separator'])) ? $attributes['separator'] : null;
-            $attributes['separator'] = '__/__';
-            $out_date = parent::datetime($fieldName, $dateFormat, 'NONE', $selected, $attributes, $showEmpty);
-            $attributes['separator'] = $tmp_separator;
-        }
-
-        if(!empty($timeFormat) && $timeFormat !== 'NONE') {
-            $out_time = parent::datetime($fieldName, 'NONE', $timeFormat, $selected, $attributes, $showEmpty);
-        }
-
-        if(!empty($out_date)){
-            $pattern = '#^(.+?)__/__(.+?)__/__(.+?)$#is';
-            $out .= preg_replace($pattern, '$1' . $datefmt['year']. ' $2'.$datefmt['month']. ' $3'. $datefmt['day'], $out_date);
-            $out .= $datefmt['afterDateTag'];
-        }
-
-        if(!empty($out_time) && $timeFormat == 24) {
-            $pattern = '#^<select(.*?)</select>:<select(.*?)$#is' ;
-            $replace = '<select$1</select>' . $timefmt['hour'] . ' <select$2' . $timefmt['min'];
-            $out .= preg_replace($pattern, $replace, $out_time);
-        }
-
-        if(!empty($out_time) && $timeFormat == 12) {
-            $pattern = '#^<select(.*?)</select>:<select(.*?)</select> <select(.*?)$#is' ;
-            $replace = '<select$1</select>' . $timefmt['hour'] . ' <select$2</select>' . $timefmt['min'] . '<select$3';
-            $out .= preg_replace($pattern, $replace, $out_time);
-        }
-
-        return $out;
-    }
-
-    public function textarea($fieldName) {
-        if($this->checkConfirmScreen()) {
-            return $this->getConfirmInput($fieldName);
-        }
-
-        $args = func_get_args();
-        return $this->__xformCallParent( array($this, 'parent::textarea'), $args);
-    }
-
-    public function radio($fieldName, $options = null) {
-        if($this->checkConfirmScreen()) {
-            return $this->getConfirmInput($fieldName, $options);
-        }
-        $args = func_get_args();
-        return $this->__xformCallParent( array($this, 'parent::radio'), $args);
-
-    }
+		return parent::input($fieldName, $options);
+	}
 
 
-    public function select($fieldName, $options = null) {
-        if($this->checkConfirmScreen()) {
-            return $this->getConfirmInput($fieldName, $options);
-        }
-        $args = func_get_args();
-        return $this->__xformCallParent( array($this, 'parent::select'), $args);
+	public function error($field, $text = null, $options = array()) {
+		$defaults = array('wrap' => true);
+		$options = array_merge($defaults, $options);
+		return parent::error($field, $text, $options);
+	}
 
-    }
+	public function dateTime($fieldName, $dateFormat = 'DMY', $timeFormat = '12', $selected = null, $attributes = array(), $showEmpty = true) {
 
-    public function checkbox($fieldName) {
-        if($this->checkConfirmScreen()) {
-            return $this->getConfirmInput($fieldName);
-        }
-        $args = func_get_args();
-        return $this->__xformCallParent( array($this, 'parent::checkbox'), $args);
-    }
+		if($this->checkConfirmScreen()) {
+			$args = func_get_args();
+			return $this->getConfirmDatetime($fieldName, $args);
+		}
 
-    public function checkConfirmScreen() {
-        if(!empty($this->request->params['xformHelperConfirmFlag']) && $this->request->params['xformHelperConfirmFlag'] === true) {
-            return true;
-        }
-
-        if($this->confirmScreenFlag === true) {
-            return true;
-        }
-        return false;
-    }
+		if(empty($attributes['monthNames']) && $this->monthNameSetNumber){
+			$attributes['monthNames'] = false;
+		}
 
 
-    protected function _confirmValueOutput($data) {
-        if($this->doHtmlEscape) {
-            $data = h($data);
-        }
+		$separator = (!empty($attributes['separator'])) ? $attributes['separator'] : '-';
+		$datefmt = array(
+				'year' => $separator,
+				'month' => $separator,
+				'day' => '',
+				'afterDateTag' => '',
+				);
+		$timefmt = array(
+				'hour' => ':',
+				'min' => '',
+				'meridian' => '',
+				);
 
-        if($this->doNl2br) {
-            $data = nl2br($data);
-        }
+		if(!empty($this->changeDatetimeSeparator)) {
+			$datefmt = $this->changeDatetimeSeparator['datefmt'];
+			$timefmt = $this->changeDatetimeSeparator['timefmt'];
+		}
 
-        if($this->escapeBrPermanent === false) {
-            $this->doHtmlEscape = true;
-            $this->doNl2br = true;
-        }
+		$out = $out_date = $out_time = null;
+		if(!empty($dateFormat) && $dateFormat !== 'NONE') {
+			$tmp_separator = (!empty($attributes['separator'])) ? $attributes['separator'] : null;
+			$attributes['separator'] = '__/__';
+			$out_date = parent::datetime($fieldName, $dateFormat, 'NONE', $selected, $attributes, $showEmpty);
+			$attributes['separator'] = $tmp_separator;
+		}
 
-        return $data;
-    }
+		if(!empty($timeFormat) && $timeFormat !== 'NONE') {
+			$out_time = parent::datetime($fieldName, 'NONE', $timeFormat, $selected, $attributes, $showEmpty);
+		}
 
+		if(!empty($out_date)){
+			$pattern = '#^(.+?)__/__(.+?)__/__(.+?)$#is';
+			$out .= preg_replace($pattern, '$1' . $datefmt['year']. ' $2'.$datefmt['month']. ' $3'. $datefmt['day'], $out_date);
+			$out .= $datefmt['afterDateTag'];
+		}
 
-    protected function _getFieldData($fieldName, $options = null) {
+		if(!empty($out_time) && $timeFormat == 24) {
+			$pattern = '#^<select(.*?)</select>:<select(.*?)$#is' ;
+			$replace = '<select$1</select>' . $timefmt['hour'] . ' <select$2' . $timefmt['min'];
+			$out .= preg_replace($pattern, $replace, $out_time);
+		}
 
-        $modelname = key($this->request->params['models']);
+		if(!empty($out_time) && $timeFormat == 12) {
+			$pattern = '#^<select(.*?)</select>:<select(.*?)</select> <select(.*?)$#is' ;
+			$replace = '<select$1</select>' . $timefmt['hour'] . ' <select$2</select>' . $timefmt['min'] . '<select$3';
+			$out .= preg_replace($pattern, $replace, $out_time);
+		}
 
-        // for Model.field pattern
-        $model_field = explode('.', $fieldName);
+		return $out;
+	}
 
-        if(!empty($model_field[1]) && !empty($this->request->data[$model_field[0]])) {
-            $fieldName = $model_field[1];
+	public function textarea($fieldName) {
+		if($this->checkConfirmScreen()) {
+			return $this->getConfirmInput($fieldName);
+		}
 
-        }else if(!empty($model_field[0])) {
-            $fieldName = $model_field[0];
-        }
+		$args = func_get_args();
+		return $this->__xformCallParent( array($this, 'parent::textarea'), $args);
+	}
 
+	public function radio($fieldName, $options = null) {
+		if($this->checkConfirmScreen()) {
+			return $this->getConfirmInput($fieldName, $options);
+		}
+		$args = func_get_args();
+		return $this->__xformCallParent( array($this, 'parent::radio'), $args);
 
-        if(!empty($model_field[1]) && !empty($this->request->data[$model_field[0]])) {
-            $data = $this->request->data[$model_field[0]];
-
-        }else{
-            if(empty($modelname)) {
-                $data = current($this->request->data);
-            }else {
-                $data = $this->request->data[$modelname];
-            }
-        }
-
-        if(isset($data[$fieldName])) {
-            return $data[$fieldName];
-        }
-
-        return false;
-    }
-
-
-
-    public function getConfirmInput($fieldName, $options = null) {
-        $data = $this->_getFieldData($fieldName, $options);
-        if(isset($data)) {
-
-            if(is_array($data)) {
-                if(is_array($options)) {
-                    foreach($data as $key => $val) {
-                        $data[$key] = (!empty($options[$val])) ? $options[$val] : $val;
-                    }
-                }
-                $out = join($this->confirmJoinSeparator, $data);
-            }else {
-                $out = (is_array($options) && !empty($options[$data])) ? $options[$data] : $data;
-            }
-            return $this->_confirmValueOutput($out);
-        }
-
-        return '';
-    }
+	}
 
 
-    public function getConfirmDatetime($fieldName, $options = array()) {
-        if($data = $this->_getFieldData($fieldName)) {
-            if(is_array($data)) {
-                $nothing = true;
-                foreach($data as $key => $val) {
-                    if(!empty($val)){
-                        $nothing = false;
-                    }
-                }
+	public function select($fieldName, $options = null) {
+		if($this->checkConfirmScreen()) {
+			return $this->getConfirmInput($fieldName, $options);
+		}
+		$args = func_get_args();
+		return $this->__xformCallParent( array($this, 'parent::select'), $args);
 
-                if($nothing) {
-                    return '';
-                }
+	}
 
-                $separator = (!empty($options[4]['separator'])) ? $options[4]['separator'] : '-';
-                $datefmt = array(
-                        'year' => $separator,
-                        'month' => $separator,
-                        'day' => '',
-                        'afterDateTag' => '',
-                        );
-                $timefmt = array(
-                        'hour' => ':',
-                        'min' => '',
-                        'meridian' => '',
-                        );
+	public function checkbox($fieldName) {
+		if($this->checkConfirmScreen()) {
+			return $this->getConfirmInput($fieldName);
+		}
+		$args = func_get_args();
+		return $this->__xformCallParent( array($this, 'parent::checkbox'), $args);
+	}
 
+	public function checkConfirmScreen() {
+		if(!empty($this->request->params['xformHelperConfirmFlag']) && $this->request->params['xformHelperConfirmFlag'] === true) {
+			return true;
+		}
 
-                $out = null;
-
-                if(!empty( $this->changeDatetimeSeparator )){
-                    $datefmt = $this->changeDatetimeSeparator['datefmt'];
-                    $timefmt = $this->changeDatetimeSeparator['timefmt'];
-                }
+		if($this->confirmScreenFlag === true) {
+			return true;
+		}
+		return false;
+	}
 
 
-                foreach($datefmt as $key => $val) {
-                    $out .= (isset($data[$key]) ? $data[$key] . $val : '');
-                }
-                if(!empty($options[2]) && $options[2] !== 'NONE') {
-                    $out .= ' ';
-                    foreach($timefmt as $key => $val) {
-                        $sprintf_fmt = (isset($data[$key]) && is_numeric($data[$key])) ? '%02d' :'%s';
-                        $out .= (isset($data[$key]) ? sprintf($sprintf_fmt ,$data[$key]) .$val : '');
-                    }
-                }
+	protected function _confirmValueOutput($data) {
+		if($this->doHtmlEscape) {
+			$data = h($data);
+		}
+
+		if($this->doNl2br) {
+			$data = nl2br($data);
+		}
+
+		if($this->escapeBrPermanent === false) {
+			$this->doHtmlEscape = true;
+			$this->doNl2br = true;
+		}
+
+		return $data;
+	}
 
 
-            }else {
-                $out = $data;
-            }
+	protected function _getFieldData($fieldName, $options = null) {
 
-            return $this->_confirmValueOutput($out);
+		$modelname = key($this->request->params['models']);
 
-        }
-        return '';
-    }
+		// for Model.field pattern
+		$model_field = explode('.', $fieldName);
+
+		if(!empty($model_field[1]) && !empty($this->request->data[$model_field[0]])) {
+			$fieldName = $model_field[1];
+
+		}else if(!empty($model_field[0])) {
+			$fieldName = $model_field[0];
+		}
 
 
-    /**
-     * call call_user_func_array with different arguments.
-     * php5.3 has different arguments from under php5.2.
-     */
-    private function __xformCallParent( $call, $args) {
+		if(!empty($model_field[1]) && !empty($this->request->data[$model_field[0]])) {
+			$data = $this->request->data[$model_field[0]];
 
-        if(PHP_VERSION >= 5.3 && is_array($call)) {
-            $call = $call[1];
-        }
-        return call_user_func_array( $call, $args);
+		}else{
+			if(empty($modelname)) {
+				$data = current($this->request->data);
+			}else {
+				$data = $this->request->data[$modelname];
+			}
+		}
 
-    }
+		if(isset($data[$fieldName])) {
+			return $data[$fieldName];
+		}
+
+		return false;
+	}
+
+
+
+	public function getConfirmInput($fieldName, $options = null) {
+		$data = $this->_getFieldData($fieldName, $options);
+		if(isset($data)) {
+
+			if(is_array($data)) {
+				if(is_array($options)) {
+					foreach($data as $key => $val) {
+						$data[$key] = (!empty($options[$val])) ? $options[$val] : $val;
+					}
+				}
+				$out = join($this->confirmJoinSeparator, $data);
+			}else {
+				$out = (is_array($options) && !empty($options[$data])) ? $options[$data] : $data;
+			}
+			return $this->_confirmValueOutput($out);
+		}
+
+		return '';
+	}
+
+
+	public function getConfirmDatetime($fieldName, $options = array()) {
+		if($data = $this->_getFieldData($fieldName)) {
+			if(is_array($data)) {
+				$nothing = true;
+				foreach($data as $key => $val) {
+					if(!empty($val)){
+						$nothing = false;
+					}
+				}
+
+				if($nothing) {
+					return '';
+				}
+
+				$separator = (!empty($options[4]['separator'])) ? $options[4]['separator'] : '-';
+				$datefmt = array(
+						'year' => $separator,
+						'month' => $separator,
+						'day' => '',
+						'afterDateTag' => '',
+						);
+				$timefmt = array(
+						'hour' => ':',
+						'min' => '',
+						'meridian' => '',
+						);
+
+
+				$out = null;
+
+				if(!empty( $this->changeDatetimeSeparator )){
+					$datefmt = $this->changeDatetimeSeparator['datefmt'];
+					$timefmt = $this->changeDatetimeSeparator['timefmt'];
+				}
+
+
+				foreach($datefmt as $key => $val) {
+					$out .= (isset($data[$key]) ? $data[$key] . $val : '');
+				}
+				if(!empty($options[2]) && $options[2] !== 'NONE') {
+					$out .= ' ';
+					foreach($timefmt as $key => $val) {
+						$sprintf_fmt = (isset($data[$key]) && is_numeric($data[$key])) ? '%02d' :'%s';
+						$out .= (isset($data[$key]) ? sprintf($sprintf_fmt ,$data[$key]) .$val : '');
+					}
+				}
+
+
+			}else {
+				$out = $data;
+			}
+
+			return $this->_confirmValueOutput($out);
+
+		}
+		return '';
+	}
+
+
+/**
+ * call call_user_func_array with different arguments.
+ * php5.3 has different arguments from under php5.2.
+ */
+	private function __xformCallParent( $call, $args) {
+
+		if(PHP_VERSION >= 5.3 && is_array($call)) {
+			$call = $call[1];
+		}
+		return call_user_func_array( $call, $args);
+
+	}
 
 }

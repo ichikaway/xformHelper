@@ -27,7 +27,7 @@ class XformjpHelper extends XformHelper {
  * @var boolean
  * @access public
  */
-    var $confirmScreenFlag = false;
+    public $confirmScreenFlag = false;
 
 /**
  * not fillin password value
@@ -36,7 +36,7 @@ class XformjpHelper extends XformHelper {
  * @var boolean
  * @access public
  */
-    var $notFillinPasswordValue = true;
+    public $notFillinPasswordValue = true;
 
 
 /**
@@ -45,7 +45,7 @@ class XformjpHelper extends XformHelper {
  * @var boolean
  * @access public
  */
-    var $doHtmlEscape = true;
+    public $doHtmlEscape = true;
 
 
 /**
@@ -54,7 +54,7 @@ class XformjpHelper extends XformHelper {
  * @var boolean
  * @access public
  */
-    var $doNl2br = true;
+    public $doNl2br = true;
 
 /**
  * If set true and change $doHtmlEcpane or $doNl2br properties,
@@ -63,7 +63,7 @@ class XformjpHelper extends XformHelper {
  * @var boolean
  * @access public
  */
-    var $escapeBrPermanent = false;
+    public $escapeBrPermanent = false;
 
 /**
  * The field which has array data like checkbox(),
@@ -72,7 +72,7 @@ class XformjpHelper extends XformHelper {
  * @var string
  * @access public
  */
-    var $confirmJoinSeparator = ', ';
+    public $confirmJoinSeparator = ', ';
 
 
 /**
@@ -96,7 +96,7 @@ class XformjpHelper extends XformHelper {
  *           )
  *       );
  */
-    var $changeDatetimeSeparator = array(
+    public $changeDatetimeSeparator = array(
             'datefmt' => array(
                 'year' => '年',
                 'month' => '月',
@@ -116,7 +116,7 @@ class XformjpHelper extends XformHelper {
  * @var array
  * @access public
  */
-    var $inputDefaultOptions = array('label' => false, 'error' => false, 'div' => false);
+    public $inputDefaultOptions = array('label' => false, 'error' => false, 'div' => false);
 
 
 /**
@@ -125,7 +125,7 @@ class XformjpHelper extends XformHelper {
  * @var boolean
  * @access public
  */
-    var $monthNameSetNumber = true;
+    public $monthNameSetNumber = true;
 
 
 /**
@@ -135,7 +135,7 @@ class XformjpHelper extends XformHelper {
  * @param string model name
  * @param array options
  */
-    function create($model = null, $options = array()) {
+    public function create($model = null, $options = array()) {
         return strip_tags(parent::create($model, $options), '<form><input>');
     }
 
@@ -146,7 +146,7 @@ class XformjpHelper extends XformHelper {
  *
  * @param array options
  */
-    function end($options = null) {
+    public function end($options = null) {
         return strip_tags(parent::end($options), '<form><input>');
     }
 

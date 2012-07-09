@@ -141,6 +141,34 @@ class XformHelper extends FormHelper {
         parent::__construct($View);
     }
 
+
+/**
+ * override __call for password() and text() method 
+ *
+ */
+		public function __call($method, $params) {
+			$fieldName = $params[0];
+			if($method === 'password' && $this->checkConfirmScreen()) {
+				$value = $this->getConfirmInput($fieldName);
+				if(!empty($value)) {
+					return '*****';
+				}else {
+					return '';
+				}
+
+			} elseif($this->checkConfirmScreen()) {
+				return $this->getConfirmInput($fieldName);
+			}
+
+
+			if($method === 'password' && $this->notFillinPasswordValue) {
+				$params[1]['value'] =  ''; //password value clear if show input form.
+			}
+
+			return parent::__call($method, $params);
+		}
+
+
     public function input($fieldName, $options = array()) {
         $options = array_merge($this->inputDefaultOptions, $options);
 
@@ -217,24 +245,6 @@ class XformHelper extends FormHelper {
         return $out;
     }
 
-    public function password($fieldName) {
-        if($this->checkConfirmScreen()) {
-            $value = $this->getConfirmInput($fieldName);
-            if(!empty($value)) {
-                return '*****';
-            }else {
-                return '';
-            }
-        }
-
-        $args = func_get_args();
-        if($this->notFillinPasswordValue) {
-            $args[1]['value'] =  ''; //password value clear if show input form.
-        }
-        return $this->__xformCallParent( array($this, 'parent::password'), $args);
-    }
-
-
     public function textarea($fieldName) {
         if($this->checkConfirmScreen()) {
             return $this->getConfirmInput($fieldName);
@@ -242,15 +252,6 @@ class XformHelper extends FormHelper {
 
         $args = func_get_args();
         return $this->__xformCallParent( array($this, 'parent::textarea'), $args);
-    }
-
-    public function text($fieldName) {
-        if($this->checkConfirmScreen()) {
-            return $this->getConfirmInput($fieldName);
-        }
-
-        $args = func_get_args();
-        return $this->__xformCallParent( array($this, 'parent::text'), $args);
     }
 
     public function radio($fieldName, $options = null) {

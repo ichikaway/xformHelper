@@ -182,7 +182,7 @@ class XformHelper extends FormHelper {
 		return parent::error($field, $text, $options);
 	}
 
-	public function dateTime($fieldName, $dateFormat = 'DMY', $timeFormat = '12', $selected = null, $attributes = array(), $showEmpty = true) {
+	public function dateTime($fieldName, $dateFormat = 'DMY', $timeFormat = '12', $attributes = array()) {
 
 		if($this->checkConfirmScreen()) {
 			$args = func_get_args();
@@ -216,12 +216,12 @@ class XformHelper extends FormHelper {
 		if(!empty($dateFormat) && $dateFormat !== 'NONE') {
 			$tmp_separator = (!empty($attributes['separator'])) ? $attributes['separator'] : null;
 			$attributes['separator'] = '__/__';
-			$out_date = parent::dateTime($fieldName, $dateFormat, 'NONE', $selected, $attributes, $showEmpty);
+			$out_date = parent::dateTime($fieldName, $dateFormat, 'NONE', $attributes);
 			$attributes['separator'] = $tmp_separator;
 		}
 
 		if(!empty($timeFormat) && $timeFormat !== 'NONE') {
-			$out_time = parent::dateTime($fieldName, 'NONE', $timeFormat, $selected, $attributes, $showEmpty);
+			$out_time = parent::dateTime($fieldName, 'NONE', $timeFormat, $attributes);
 		}
 
 		if(!empty($out_date)){

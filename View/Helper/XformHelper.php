@@ -143,7 +143,7 @@ class XformHelper extends FormHelper {
 
 
 /**
- * override __call for password() and text() method 
+ * override __call for password() and text() method
  *
  */
 	public function __call($method, $params) {
@@ -216,12 +216,12 @@ class XformHelper extends FormHelper {
 		if(!empty($dateFormat) && $dateFormat !== 'NONE') {
 			$tmp_separator = (!empty($attributes['separator'])) ? $attributes['separator'] : null;
 			$attributes['separator'] = '__/__';
-			$out_date = parent::datetime($fieldName, $dateFormat, 'NONE', $selected, $attributes, $showEmpty);
+			$out_date = parent::dateTime($fieldName, $dateFormat, 'NONE', $selected, $attributes, $showEmpty);
 			$attributes['separator'] = $tmp_separator;
 		}
 
 		if(!empty($timeFormat) && $timeFormat !== 'NONE') {
-			$out_time = parent::datetime($fieldName, 'NONE', $timeFormat, $selected, $attributes, $showEmpty);
+			$out_time = parent::dateTime($fieldName, 'NONE', $timeFormat, $selected, $attributes, $showEmpty);
 		}
 
 		if(!empty($out_date)){

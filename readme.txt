@@ -27,7 +27,7 @@ Installation
  * load plugin in bootstrap
  	CakePlugin::load('Xform');
  * Include the helper in your controller.php:
-	var $helpers = array('Xform.Xformp');
+	var $helpers = array('Form', 'Xform.Xform');
  * call method of XformHelper in your view.
  	echo $this->Xform->input('title');
 

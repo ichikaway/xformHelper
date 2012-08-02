@@ -315,10 +315,13 @@ class XformHelper extends FormHelper {
 
 		$modelname = key($this->request->params['models']);
 
-		// for Model.field pattern
+		// for Model.field or Model.N.field pattern
 		$model_field = explode('.', $fieldName);
 
-		if(!empty($model_field[1]) && !empty($this->request->data[$model_field[0]])) {
+		if(!empty($model_field[2]) && !empty($this->request->data[$model_field[0]])) {
+			$fieldName = $model_field[2];
+
+		}else if(!empty($model_field[1]) && !empty($this->request->data[$model_field[0]])) {
 			$fieldName = $model_field[1];
 
 		}else if(!empty($model_field[0])) {
@@ -326,7 +329,10 @@ class XformHelper extends FormHelper {
 		}
 
 
-		if(!empty($model_field[1]) && !empty($this->request->data[$model_field[0]])) {
+		if(!empty($model_field[2]) && !empty($this->request->data[$model_field[0]])) {
+			$data = $this->request->data[$model_field[0]][$model_field[1]];
+
+		}else if(!empty($model_field[1]) && !empty($this->request->data[$model_field[0]])) {
 			$data = $this->request->data[$model_field[0]];
 
 		}else{

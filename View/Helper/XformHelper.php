@@ -18,7 +18,7 @@
  * XFormHelper
  *
  * On confirmation screen, this helper just show value of post data
- *  insted of making form tags.
+ *  instead of making form tags.
  * On form input screen, this helper behaves same as form helper.
  *
  * How does this helper know on confirmation screen?
@@ -29,7 +29,7 @@
  *     XformHelper::confirmScreenFlag = true;
  *
  * If you want to mask a password field on confirmation screen,
- *  use password() insted of input().
+ *  use password() instead of input().
  *
  * If you want to change separator of datetime,
  *  set separator value on the changeDatetimeSeparator property.
@@ -73,7 +73,7 @@ class XformHelper extends FormHelper {
 	public $doNl2br = true;
 
 /**
- * If set true and change $doHtmlEcpane or $doNl2br properties,
+ * If set true and change $doHtmlEscape or $doNl2br properties,
  * these properties are not changed by default value after output.
  *
  * @var boolean
@@ -83,7 +83,7 @@ class XformHelper extends FormHelper {
 
 /**
  * The field which has array data like checkbox(),
- * thease array value join with this separator on confirmation screen.
+ * these array value join with this separator on confirmation screen.
  *
  * @var string
  * @access public

@@ -3,7 +3,7 @@
  extends cakephp Form helper.
 
  On confirmation screen, this helper just show value of post data
-  insted of making form tags.
+  instead of making form tags.
 
  On form input screen, this helper behaves same as form helper.
 
@@ -15,7 +15,7 @@
      $this->XformHelper->confirmScreenFlag = true;
 
  If you want to mask a password field on confirmation screen,
-  use password method insted of input method.
+  use password method instead of input method.
 
  If you want to change separator of datetime,
   set separator value on the changeDatetimeSeparator property.

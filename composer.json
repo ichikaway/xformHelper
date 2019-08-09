@@ -1,0 +1,23 @@
+{
+    "name": "ichikaway/xform",
+    "description": "XFormHelper(Plugin) extends cakephp Form helper.",
+    "type": "cakephp-plugin",
+    "keywords": ["cakephp", "form"],
+    "homepage": "https://github.com/ichikaway/xformHelper",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Yasushi Ichikawa",
+            "homepage": "http://twitter.com/ichikaway",
+            "role": "Author"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/ichikaway/xformHelper/issues",
+        "source": "https://github.com/ichikaway/xformHelper"
+    },
+    "require": {
+        "php": ">=5.3.0",
+        "composer/installers": "*"
+    }
+}

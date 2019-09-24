@@ -144,10 +144,12 @@ class XformjpHelper extends XformHelper {
  * the end method which shows only form and input tag.
  * delete display:none, because can not send Token with Japanese mobile devices.
  *
- * @param array options
+ * @param string|array $options
+ * @param array $secureAttributes
+ * @return string
  */
-    public function end($options = null) {
-        return strip_tags(parent::end($options), '<form><input>');
+    public function end($options = null, $secureAttributes = array()) {
+        return strip_tags(parent::end($options, $secureAttributes), '<form><input>');
     }
 
 
